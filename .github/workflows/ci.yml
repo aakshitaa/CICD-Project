@@ -8,16 +8,16 @@
 
 name: Java CI with Maven
 
-on:
+on: #when an event occurs
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build: #one job
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest #use the cell posted if you want to run on other runners
 
     steps:
     - uses: actions/checkout@v3
@@ -30,4 +30,13 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
+    - name: Build & push Docker image
+    uses: mr-smithers-excellent/docker-build-push@v6
+    with:
+      image: aakshita/CICD-Project
+      tags: v1, latest
+      registry: registry-url.io
+      dockerfile: Dockerfile.ci
+      username: ${{ secrets.DOCKER_USERNAME }}
+      password: ${{ secrets.DOCKER_PASSWORD }}
     
